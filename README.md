@@ -10,6 +10,6 @@ What's in this?
   <li>Database and Models config</li>
   <li>DTO struct validation</li>
   <li>Service oriented pattern</li>
-  <li>CDN routes and setup if you wanted to host assets or image within your servcer file</li>
+  <li>CDN routes and setup if you wanted to host assets or images within your server</li>
 </ul>
 If you have any comments, questions or suggestions please email me at icaminajerick@gmail.com.
