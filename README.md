@@ -9,7 +9,7 @@ What's in this?
   <li>Data layer for DTO</li>
   <li>Database and Models config</li>
   <li>DTO struct validation</li>
-  <li>Service oriented patter</li>
+  <li>Service oriented pattern</li>
   <li>CDN routes and setup if you wanted to host assets or image within your servcer file</li>
 </ul>
 If you have any comments, questions or suggestions please email me at icaminajerick@gmail.com.
