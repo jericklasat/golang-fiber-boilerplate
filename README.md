@@ -1,5 +1,5 @@
 # golang-fiber-gorm-boilerplate
-This is a boiler plate for golang using fiber and gorm. If you wanna get started with restapi you can use this boiler plate.
+This is a rest api boiler plate for golang using fiber and gorm and mysql. If you wanna get started with restapi you can use this boiler plate.
 <br/>
 What's in this?
 <ul>
