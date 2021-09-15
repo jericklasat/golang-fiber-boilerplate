@@ -1,9 +1,9 @@
 package main
 
 import (
-	database "bnw-backend/configs"
-	"bnw-backend/repositories"
-	"bnw-backend/routes"
+	database "golang-fiber-boilerplate/configs"
+	"golang-fiber-boilerplate/repositories"
+	"golang-fiber-boilerplate/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
