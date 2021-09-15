@@ -1,10 +1,10 @@
 package response
 
 type DataResponse struct {
-	Status int `json:"status"`;
-	Message string `json:"message"`;
-	Data string `json:"data"`;
-	Error ErrorStruct `json:"error"`;
+	Status int `json:"status"`
+	Message string `json:"message"`
+	Data string `json:"data"`
+	Error ErrorStruct `json:"error"`
 }
 
 type ValidateError struct {
@@ -18,4 +18,4 @@ type ErrorData struct {
 	Tag string;
 }
 
-type ErrorStruct []ErrorData;
+type ErrorStruct []ErrorData

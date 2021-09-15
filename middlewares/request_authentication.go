@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"bnw-backend/helpers"
+	"golang-fiber-boilerplate/helpers"
 	"os"
 	"strings"
 
@@ -14,25 +14,25 @@ func RequestAuthencation(ctx *fiber.Ctx) error {
 	ctx.Set("Strict-Transport-Security", "max-age=5184000");
 	ctx.Set("X-DNS-Prefetch-Control", "off");
 
-	url_whitelist := []string {
+	urlWhitelist := []string {
 		"/api/v1/user/login",
 		"/api/v1/user/create",
 	}
 
 	// Check if url is in whitelist
-	if helpers.InArray(ctx.OriginalURL(), url_whitelist) || strings.Contains(ctx.OriginalURL(), "cdn") {
+	if helpers.InArray(ctx.OriginalURL(), urlWhitelist) || strings.Contains(ctx.OriginalURL(), "cdn") {
 		return ctx.Next();
 	}
 
-	authorization_token  := string(ctx.Request().Header.Peek("Authorization"));
+	authorizationToken  := string(ctx.Request().Header.Peek("Authorization"));
 
 	// Check if user passed authorization header.
-	if authorization_token == "" {
+	if authorizationToken == "" {
 		return ctx.SendStatus(fiber.StatusUnauthorized);
 	}
 
 	// Check if token is valid
-	_, err := jwt.ParseWithClaims(authorization_token, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(authorizationToken, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("TOKEN_SECRET")), nil
 	});
 
@@ -40,5 +40,5 @@ func RequestAuthencation(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusUnauthorized);
 	}
 
-	return ctx.Next();
+	return ctx.Next()
 }

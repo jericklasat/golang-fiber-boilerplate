@@ -1,4 +1,4 @@
-module bnw-backend
+module golang-fiber-boilerplate
 
 go 1.16
 

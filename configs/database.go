@@ -1,8 +1,8 @@
 package database
 
 import (
-	"bnw-backend/models"
 	"fmt"
+	"golang-fiber-boilerplate/models"
 	"log"
 	"os"
 
@@ -15,9 +15,9 @@ var DB *gorm.DB;
 
 func loadCredentials() map[string] string {
 	err := godotenv.Load()
-  if err != nil {
-    log.Fatal("Error loading .env file");
-  }
+	if err != nil {
+	log.Fatal("Error loading .env file")
+	}
 
 	return map[string] string {
 		"username": os.Getenv("DB_USERNAME"),
@@ -30,18 +30,21 @@ func loadCredentials() map[string] string {
 func Init() *gorm.DB {
 	credentials := loadCredentials();
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", credentials["username"], credentials["password"], credentials["url"], credentials["db_name"]);
-	db_instance, db_err := gorm.Open(mysql.Open(dsn), &gorm.Config{});
+	dbInstance, dbErr := gorm.Open(mysql.Open(dsn), &gorm.Config{});
 	
-	if (db_err != nil) {
+	if dbErr != nil {
 		panic("Failed to connect to database");
 	}
 
-	DB = db_instance;
-	return db_instance;
+	DB = dbInstance
+	return dbInstance
  }
 
  func Migrate() {
-	DB.AutoMigrate(
+	 err := DB.AutoMigrate(
 		&models.User{},
-	);
+	)
+	 if err != nil {
+		 return
+	 }
  }

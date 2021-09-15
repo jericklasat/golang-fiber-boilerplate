@@ -1,25 +1,25 @@
 package repositories
 
 import (
-	"bnw-backend/data/dto"
-	"bnw-backend/models"
 	"fmt"
+	"golang-fiber-boilerplate/data/dto"
+	"golang-fiber-boilerplate/models"
 )
 
 func CreateUser(userData dto.User) string {
-	err := DB.Create(userData).Error;
+	err := DB.Create(userData).Error
 	if err != nil {
-		fmt.Println(err);
-		return err.Error();
+		fmt.Println(err)
+		return err.Error()
 	}
-	return "OK";
+	return "OK"
 }
 
 func GetUserByEmail(email string) models.User {
-	var user_data models.User;
-	err := DB.Where("email = ?", email).First(&user_data);
+	var userData models.User
+	err := DB.Where("email = ?", email).First(&userData)
 	if err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
-	return user_data;
+	return userData
 }

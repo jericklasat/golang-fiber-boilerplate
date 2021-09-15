@@ -12,10 +12,10 @@ import (
 func UploadFile(header *multipart.FileHeader) string {
 	file, err := header.Open();
 	if err != nil {
-		fmt.Println("Error Retrieving the File");
-		fmt.Println(err);
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
 	}
-	defer file.Close();
+	defer file.Close()
 	
 	fmt.Printf("Uploaded File: %+v\n", header.Filename)
 	fmt.Printf("File Size: %+v\n", header.Size)
@@ -23,18 +23,18 @@ func UploadFile(header *multipart.FileHeader) string {
 
 	sec := strconv.Itoa(int(time.Now().Unix()));
 
-	var filename string = sec + "_" + header.Filename;
+	var filename string = sec + "_" + header.Filename
 	
-	dst, err := os.Create("public/images/" + filename);
+	dst, err := os.Create("public/images/" + filename)
 	if err != nil {
-		fmt.Println("Error creating file");
-		fmt.Println(err);
+		fmt.Println("Error creating file")
+		fmt.Println(err)
 	}
-	defer dst.Close();
+	defer dst.Close()
 	
 	if _, err := io.Copy(dst, file); err != nil {
-		fmt.Println(err);
+		fmt.Println(err)
 	}
-	fmt.Println("Successfully Uploaded File");
-	return filename;
+	fmt.Println("Successfully Uploaded File")
+	return filename
 }

@@ -1,12 +1,12 @@
 package services
 
 import (
-	"bnw-backend/data/dto"
-	"bnw-backend/data/response"
-	"bnw-backend/repositories"
-	"bnw-backend/validations"
 	"encoding/json"
 	"fmt"
+	"golang-fiber-boilerplate/data/dto"
+	"golang-fiber-boilerplate/data/response"
+	"golang-fiber-boilerplate/repositories"
+	"golang-fiber-boilerplate/validations"
 	"os"
 	"strconv"
 	"time"
@@ -17,91 +17,91 @@ import (
 )
 
 func CreateUser(user *dto.User) response.DataResponse {
-	password,_ := bcrypt.GenerateFromPassword([]byte(user.Password), 14);
-	base_data := dto.BaseDto {
+	password,_ := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	baseData := dto.BaseDto {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-	};
-	user_data := dto.User {
+	}
+	userData := dto.User {
 		Name: user.Name,
 		Email: user.Email,
 		Password: string(password),
 		IsVerified: user.IsVerified,
 		Level: user.Level,
 		Status: user.Status,
-		BaseDto: base_data,
+		BaseDto: baseData,
 	};
 	
 	// Set Validation Struct
-	validations.UserStruct = user_data;
+	validations.UserStruct = userData
 	// Validate
-	errors := validations.ValidateUserStruct();
+	errors := validations.ValidateUserStruct()
 	if errors != nil {
-		response := response.DataResponse {
+		dataResponse := response.DataResponse {
 			Status: fiber.StatusNotAcceptable,
 			Message: "Input error",
 			Error: errors,
 		}
-		return response;
+		return dataResponse
 	}
 
 	// Handle repositories error
-	repository_response := repositories.CreateUser(user_data);
-	if (repository_response != "OK") {
-		response := response.DataResponse {
+	repositoryResponse := repositories.CreateUser(userData)
+	if repositoryResponse != "OK" {
+		dataResponse := response.DataResponse {
 			Status: 1062,
-			Message: repository_response,
+			Message: repositoryResponse,
 		}
-		return response;
+		return dataResponse
 	}
 
-	data,_ := json.Marshal(user_data);
+	data,_ := json.Marshal(userData)
 
-	response := response.DataResponse {
+	dataResponse := response.DataResponse {
 		Status: fiber.StatusOK,
 		Message: "Creation successful",
 		Data: string(data),
 	}
-	return response;
+	return dataResponse
 }
 
 func AuthenticateUser(credentials map[string]string) response.DataResponse {
-	user_data := repositories.GetUserByEmail(credentials["email"]);
-	if user_data.ID == 0 {
-		response := response.DataResponse {
+	userData := repositories.GetUserByEmail(credentials["email"])
+	if userData.ID == 0 {
+		dataResponse := response.DataResponse {
 			Status: fiber.StatusNotFound,
 			Message: "Account not found.",
 		}
-		return response;
+		return dataResponse
 	}
 
-	if err:= bcrypt.CompareHashAndPassword([]byte(user_data.Password), []byte(credentials["password"])); err != nil {
-		response := response.DataResponse {
+	if err:= bcrypt.CompareHashAndPassword([]byte(userData.Password), []byte(credentials["password"])); err != nil {
+		dataResponse := response.DataResponse {
 			Status: fiber.StatusNotFound,
 			Message: "Incorrect password.",
 		}
-		return response;
+		return dataResponse
 	}
 	
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer: strconv.Itoa(int(user_data.ID)),
+		Issuer: strconv.Itoa(int(userData.ID)),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-	});
+	})
 
 	token, err := claims.SignedString([]byte(os.Getenv("TOKEN_SECRET")));
 	if err != nil {
-		response := response.DataResponse {
+		dataResponse := response.DataResponse {
 			Status: fiber.StatusInternalServerError,
 			Message: "Cannot generate token.",
 		}
-		fmt.Println(err);
-		return response;
+		fmt.Println(err)
+		return dataResponse
 	}
 
-	response := response.DataResponse {
+	dataResponse := response.DataResponse {
 		Status: fiber.StatusOK,
 		Message: "Authentication successful.",
 		Data: token,
 	}
-	return response;
+	return dataResponse
 }
