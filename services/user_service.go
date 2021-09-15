@@ -88,7 +88,7 @@ func AuthenticateUser(credentials map[string]string) response.DataResponse {
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	token, err := claims.SignedString([]byte(os.Getenv("TOKEN_SECRET")));
+	token, err := claims.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
 	if err != nil {
 		dataResponse := response.DataResponse {
 			Status: fiber.StatusInternalServerError,

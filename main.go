@@ -7,21 +7,24 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-);
+)
 
 func main() {
-	app := fiber.New();
-	db := database.Init();
-	database.Migrate();
+	app := fiber.New()
+	db := database.Init()
+	database.Migrate()
 
-	repositories.DB = db;
+	repositories.DB = db
 
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 		AllowOrigins: "*",
-	}));
+	}))
 	
-	routes.Setup(app);
-	
-	app.Listen(":5000");
+	routes.Setup(app)
+
+	err := app.Listen(":5000")
+	if err != nil {
+		return 
+	}
 }
