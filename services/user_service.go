@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"golang-fiber-boilerplate/data/dto"
 	"golang-fiber-boilerplate/data/response"
+	"golang-fiber-boilerplate/enums"
 	"golang-fiber-boilerplate/repositories"
 	"golang-fiber-boilerplate/validations"
 	"os"
@@ -45,7 +46,7 @@ func CreateUser(user *dto.User) response.DataResponse {
 	repositoryResponse := repositories.CreateUser(userData)
 	if repositoryResponse != "OK" {
 		return response.DataResponse{
-			Status:  1062,
+			Status:  enums.RepositoryError,
 			Message: repositoryResponse,
 		}
 	}
