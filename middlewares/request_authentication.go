@@ -1,44 +1,54 @@
 package middlewares
 
 import (
+	"golang-fiber-boilerplate/data/dto"
 	"golang-fiber-boilerplate/helpers"
 	"os"
 	"strings"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 )
 
-func RequestAuthencation(ctx *fiber.Ctx) error {
+func RequestAuthentication(ctx *fiber.Ctx) error {
 	ctx.Set("X-XSS-Protection", "1; mode=block");
-	ctx.Set("Strict-Transport-Security", "max-age=5184000");
-	ctx.Set("X-DNS-Prefetch-Control", "off");
+	ctx.Set("Strict-Transport-Security", "max-age=5184000")
+	ctx.Set("X-DNS-Prefetch-Control", "off")
 
-	urlWhitelist := []string {
-		"/api/v1/user/login",
-		"/api/v1/user/create",
-	}
+	urlWhitelist := getWhiteList()
 
-	// Check if url is in whitelist
 	if helpers.InArray(ctx.OriginalURL(), urlWhitelist) || strings.Contains(ctx.OriginalURL(), "cdn") {
-		return ctx.Next();
+		return ctx.Next()
 	}
 
-	authorizationToken  := string(ctx.Request().Header.Peek("Authorization"));
+	authorizationToken := getAuthorizationToken(ctx)
 
-	// Check if user passed authorization header.
 	if authorizationToken == "" {
-		return ctx.SendStatus(fiber.StatusUnauthorized);
+		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 
-	// Check if token is valid
-	_, err := jwt.ParseWithClaims(authorizationToken, &jwt.StandardClaims{}, func(t *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(authorizationToken, &dto.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(os.Getenv("TOKEN_SECRET")), nil
-	});
+	})
 
 	if err != nil {
-		return ctx.SendStatus(fiber.StatusUnauthorized);
+		return ctx.SendStatus(fiber.StatusUnauthorized)
 	}
 
 	return ctx.Next()
+}
+
+func getAuthorizationToken(ctx *fiber.Ctx) string {
+	authorizationToken := string(ctx.Request().Header.Peek("Authorization"))
+	authorizationToken = strings.Replace(authorizationToken, "Bearer ", "", 1)
+
+	return authorizationToken
+}
+
+func getWhiteList() []string {
+
+	return []string {
+		"/api/v1/user/login",
+		"/api/v1/user/create",
+	}
 }

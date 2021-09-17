@@ -15,7 +15,7 @@ func Setup (app *fiber.App) {
 	/*
 	 * Version 1
 	 */
-	v1 := api.Group("/v1", middlewares.RequestAuthencation)
+	v1 := api.Group("/v1", middlewares.RequestAuthentication)
 
 	user := v1.Group("/user")
 	user.Post("/create",controllers.CreateUser)

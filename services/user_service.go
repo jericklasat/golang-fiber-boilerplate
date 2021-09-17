@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -30,11 +30,10 @@ func CreateUser(user *dto.User) response.DataResponse {
 		Level: user.Level,
 		Status: user.Status,
 		BaseDto: baseData,
-	};
-	
-	// Set Validation Struct
+	}
+
 	validations.UserStruct = userData
-	// Validate
+
 	errors := validations.ValidateUserStruct()
 	if errors != nil {
 		dataResponse := response.DataResponse {
@@ -82,13 +81,17 @@ func AuthenticateUser(credentials map[string]string) response.DataResponse {
 		}
 		return dataResponse
 	}
-	
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		Issuer: strconv.Itoa(int(userData.ID)),
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
-	})
 
-	token, err := claims.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
+	claims := dto.Claims{
+		Issuer: strconv.Itoa(int(userData.ID)),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedString, err := token.SignedString([]byte(os.Getenv("TOKEN_SECRET")))
+
 	if err != nil {
 		dataResponse := response.DataResponse {
 			Status: fiber.StatusInternalServerError,
@@ -101,7 +104,7 @@ func AuthenticateUser(credentials map[string]string) response.DataResponse {
 	dataResponse := response.DataResponse {
 		Status: fiber.StatusOK,
 		Message: "Authentication successful.",
-		Data: token,
+		Data: signedString,
 	}
 	return dataResponse
 }

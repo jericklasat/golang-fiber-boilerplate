@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB;
+var DB *gorm.DB
 
 func loadCredentials() map[string] string {
 	err := godotenv.Load()
@@ -30,7 +30,7 @@ func loadCredentials() map[string] string {
 func Init() *gorm.DB {
 	credentials := loadCredentials();
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", credentials["username"], credentials["password"], credentials["url"], credentials["db_name"]);
-	dbInstance, dbErr := gorm.Open(mysql.Open(dsn), &gorm.Config{});
+	dbInstance, dbErr := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	
 	if dbErr != nil {
 		panic("Failed to connect to database");
