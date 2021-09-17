@@ -1,5 +1,7 @@
 # golang-fiber-gorm-boilerplate
-This is a rest api boiler plate for golang using fiber and gorm and mysql. If you wanna get started with rest api you can use this boiler plate.
+
+This is a rest api boiler plate for golang using fiber and gorm and mysql. If you wanna get started with rest api you
+can use this boiler plate.
 <br/>
 What's in this?
 <ul>
@@ -12,4 +14,5 @@ What's in this?
   <li>Service oriented pattern</li>
   <li>CDN routes and setup if you wanted to host assets or images within your server</li>
 </ul>
-If you have any comments, questions or suggestions please email me at icaminajerick@gmail.com.
+
+If you have any comments, questions or suggestions please email me at **icaminajerick@gmail.com**.
